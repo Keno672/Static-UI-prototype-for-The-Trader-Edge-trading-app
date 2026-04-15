@@ -1,0 +1,1 @@
+# The Trader Edge\n\nOpen `index.html` in your browser. Static GitHub-ready HTML/CSS/JS prototype with upgraded card graphics.\n
