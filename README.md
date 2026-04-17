@@ -1,1 +1,1 @@
-Single merged package with unified assets.
+Admin upload-first panel and clickable watchlist rows to asset command page.
