@@ -1,111 +1,23 @@
 
-function nav(active) {
-  const links=[['index.html','Home'],['login.html','Login'],['dashboard.html','Command Desk'],['watchlist.html','Watchlist'],['pricing.html','Pricing'],['admin.html','Admin']];
-  return `<div class="topnav"><div class="brand">The Trader <span>Edge</span></div><div class="navlinks">${links.map(([h,l])=>`<a href="${h}" ${active===l?'style="border-color:rgba(216,176,108,.28);background:rgba(216,176,108,.12)"':''}>${l}</a>`).join('')}</div></div>`;
-}
 const DEFAULT_WATCHLIST = {"updatedAt": "Morning Command", "macro": [["NAS100", "Nasdaq 100", "Indices", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["SPX500", "S&P 500", "Indices", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["GOLD", "Gold Spot", "Metals", "down", ["green", "red", "yellow"], "SELL", "Aligned", "Premium"], ["SILVER", "Silver Spot", "Metals", "up", ["yellow", "yellow", "yellow"], "BUY", "Mixed", "Premium"], ["US30", "Dow 30", "Indices", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["US2000", "Russell 2000", "Indices", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["UK100", "FTSE 100", "Indices", "down", ["yellow", "red", "red"], "SELL", "Conflicted", "Free"], ["#US$idx", "US Dollar Index", "Forex Proxy", "down", ["red", "red", "red"], "SELL", "Aligned", "Premium"], ["USDJPY", "USDJPY", "Forex", "up", ["green", "red", "yellow"], "BUY", "Watch", "Premium"], ["WTI", "WTI Crude", "Energy", "down", ["yellow", "red", "red"], "SELL", "Aligned", "Premium"], ["BRENT", "Brent Crude", "Energy", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["GERMANY40", "Germany 40", "Indices", "up", ["red", "yellow", "green"], "BUY", "Conflicted", "Premium"], ["BP.L", "BP Plc", "Equity", "up", ["red", "yellow", "green"], "BUY", "Conflicted", "Premium"], ["EURUSD", "EURUSD", "Forex", "up", ["red", "green", "green"], "BUY", "Building", "Premium"]], "crypto": [["AAVE", "Aave", "Crypto", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["ALGORAND", "Algorand", "Crypto", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["APTOS", "Aptos", "Crypto", "down", ["green", "red", "yellow"], "SELL", "Watch", "Premium"], ["AVALANCHE", "Avalanche", "Crypto", "up", ["yellow", "yellow", "yellow"], "BUY", "Mixed", "Premium"], ["BITCOIN", "Bitcoin", "Crypto", "up", ["green", "green", "green"], "BUY", "Building", "Premium"], ["CARDANO", "Cardano", "Crypto", "down", ["yellow", "red", "red"], "SELL", "Aligned", "Premium"], ["CHAINLINK", "Chainlink", "Crypto", "down", ["yellow", "red", "red"], "SELL", "Aligned", "Premium"], ["DOGECOIN", "Dogecoin", "Crypto", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["ETHEREUM", "Ethereum", "Crypto", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["LITECOIN", "Litecoin", "Crypto", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["NEAR", "NEAR", "Crypto", "down", ["yellow", "red", "red"], "SELL", "Aligned", "Premium"], ["POLKADOT", "Polkadot", "Crypto", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["SOLANA", "Solana", "Crypto", "down", ["yellow", "red", "yellow"], "SELL", "Watch", "Premium"], ["THETA", "Theta", "Crypto", "up", ["red", "yellow", "green"], "BUY", "Conflicted", "Premium"], ["XRP", "XRP", "Crypto", "up", ["red", "yellow", "green"], "BUY", "Conflicted", "Premium"]]};
-function getWatchlistData() {
-  try {
-    const raw = localStorage.getItem('tte_watchlist_data');
-    if (!raw) return DEFAULT_WATCHLIST;
-    return JSON.parse(raw);
-  } catch (e) {
-    return DEFAULT_WATCHLIST;
-  }
-}
-function setWatchlistData(data) {
-  localStorage.setItem('tte_watchlist_data', JSON.stringify(data));
-}
-function conv(arr) {
-  return `<div class="blocks">${arr.map(c=>`<span class="block ${c}"></span>`).join('')}</div>`;
-}
-function watchRow(r) {
-  return `<div class="wrow"><div><div class="sym">${r[0]}</div><div class="name">${r[1]}</div></div><div>${r[2]}</div><div>${r[3]==='up'?'<span class="arrow-up">↑</span>':'<span class="arrow-down">↓</span>'}</div><div>${conv(r[4])}</div><div><span class="pill ${r[5]==='BUY'?'buy':'sell'}">${r[5]}</span></div><div>${r[6]}</div><div>${r[7]}</div></div>`;
-}
-function renderWatchlist() {
-  const data = getWatchlistData();
-  const updated = document.getElementById('updatedSession');
-  if (updated) updated.textContent = data.updatedAt || 'Latest';
-  const macro = document.getElementById('macro');
-  const crypto = document.getElementById('crypto');
-  if (macro) macro.innerHTML = data.macro.map(watchRow).join('');
-  if (crypto) crypto.innerHTML = data.crypto.map(watchRow).join('');
-}
-function previewScanImage(input) {
-  const file = input.files && input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('scanPreview');
-    img.src = e.target.result;
-    img.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
-function optionList(selected, arr) {
-  return arr.map(v => `<option value="${v}" ${selected===v?'selected':''}>${v}</option>`).join('');
-}
-function rowEditor(section, idx, row) {
-  return `<div class="admin-row">
-    <input data-section="${section}" data-idx="${idx}" data-field="ticker" value="${row[0]}">
-    <input data-section="${section}" data-idx="${idx}" data-field="name" value="${row[1]}">
-    <input data-section="${section}" data-idx="${idx}" data-field="category" value="${row[2]}">
-    <select data-section="${section}" data-idx="${idx}" data-field="trend">${optionList(row[3], ['up','down'])}</select>
-    <select data-section="${section}" data-idx="${idx}" data-field="conv0">${optionList(row[4][0], ['green','yellow','red'])}</select>
-    <select data-section="${section}" data-idx="${idx}" data-field="conv1">${optionList(row[4][1], ['green','yellow','red'])}</select>
-    <select data-section="${section}" data-idx="${idx}" data-field="conv2">${optionList(row[4][2], ['green','yellow','red'])}</select>
-    <select data-section="${section}" data-idx="${idx}" data-field="bias">${optionList(row[5], ['BUY','SELL'])}</select>
-    <input data-section="${section}" data-idx="${idx}" data-field="state" value="${row[6]}">
-    <select data-section="${section}" data-idx="${idx}" data-field="access">${optionList(row[7], ['Free','Premium'])}</select>
-    <div class="row-tools"><button class="icon-btn" onclick="removeRow('${section}',${idx})">✕</button></div>
-  </div>`;
-}
-let adminData = null;
-function loadDataToAdmin(data) {
-  adminData = JSON.parse(JSON.stringify(data));
-  document.getElementById('sessionName').value = adminData.updatedAt || 'Update';
-  document.getElementById('macroTable').innerHTML = adminData.macro.map((r,i)=>rowEditor('macro', i, r)).join('');
-  document.getElementById('cryptoTable').innerHTML = adminData.crypto.map((r,i)=>rowEditor('crypto', i, r)).join('');
-  bindEditors();
-}
-function bindEditors() {
-  document.querySelectorAll('[data-field]').forEach(el => {
-    el.oninput = () => applyEdit(el);
-    el.onchange = () => applyEdit(el);
-  });
-}
-function applyEdit(el) {
-  const section = el.dataset.section;
-  const idx = Number(el.dataset.idx);
-  const field = el.dataset.field;
-  const row = adminData[section][idx];
-  const val = el.value;
-  if (field === 'ticker') row[0] = val;
-  else if (field === 'name') row[1] = val;
-  else if (field === 'category') row[2] = val;
-  else if (field === 'trend') row[3] = val;
-  else if (field === 'conv0') row[4][0] = val;
-  else if (field === 'conv1') row[4][1] = val;
-  else if (field === 'conv2') row[4][2] = val;
-  else if (field === 'bias') row[5] = val;
-  else if (field === 'state') row[6] = val;
-  else if (field === 'access') row[7] = val;
-}
-function removeRow(section, idx) {
-  adminData[section].splice(idx,1);
-  loadDataToAdmin(adminData);
-}
-function addRow(section) {
-  adminData[section].push(['NEW','New Instrument','Category','up',['green','green','green'],'BUY','Watch','Premium']);
-  loadDataToAdmin(adminData);
-}
-function loadDefaultsIntoAdmin() { loadDataToAdmin(DEFAULT_WATCHLIST); }
-function loadSavedIntoAdmin() { loadDataToAdmin(getWatchlistData()); }
-function applyThisScan() {
-  adminData.updatedAt = document.getElementById('sessionName').value || 'Update';
-  setWatchlistData(adminData);
-  const status = document.getElementById('status');
-  status.className = 'status good';
-  status.innerHTML = 'This scan has been applied to the Watchlist. <a class="anchor" href="watchlist.html">Open Watchlist</a>';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+function nav(active){const links=[['index.html','Home'],['login.html','Login'],['dashboard.html','Command Desk'],['watchlist.html','Watchlist'],['pricing.html','Pricing'],['admin.html','Admin']];return `<div class="topnav"><div class="brand">The Trader <span>Edge</span></div><div class="navlinks">${links.map(([h,l])=>`<a href="${h}" ${active===l?'style="border-color:rgba(216,176,108,.28);background:rgba(216,176,108,.12)"':''}>${l}</a>`).join('')}</div></div>`;}
+function getWatchlistData(){try{const raw=localStorage.getItem('tte_watchlist_data');if(!raw)return DEFAULT_WATCHLIST;return JSON.parse(raw)}catch(e){return DEFAULT_WATCHLIST}}
+function setWatchlistData(data){localStorage.setItem('tte_watchlist_data',JSON.stringify(data))}
+function conv(arr){return `<div class="blocks">${arr.map(c=>`<span class="block ${c}"></span>`).join('')}</div>`}
+function watchRow(r){return `<div class="wrow"><div><div class="sym">${r[0]}</div><div class="name">${r[1]}</div></div><div>${r[2]}</div><div>${r[3]==='up'?'<span class="arrow-up">↑</span>':'<span class="arrow-down">↓</span>'}</div><div>${conv(r[4])}</div><div><span class="pill ${r[5]==='BUY'?'buy':'sell'}">${r[5]}</span></div><div>${r[6]}</div><div>${r[7]}</div></div>`}
+function renderWatchlist(){const d=getWatchlistData();const u=document.getElementById('updatedSession');if(u)u.textContent=d.updatedAt||'Latest';const m=document.getElementById('macro');const c=document.getElementById('crypto');if(m)m.innerHTML=d.macro.map(watchRow).join('');if(c)c.innerHTML=d.crypto.map(watchRow).join('')}
+function intelCard(){return `<div class="card intel"><div class="topline"><div class="tag">Free · Intel</div><div class="pricebox"><div class="mini">Live Price</div><div class="price">10,634.84</div></div></div><div style="margin-top:14px"><div class="symbol">UK100</div><div class="subtitle">FTSE 100 Index</div></div><div class="statusrow"><div class="pill buy">BUY</div><div class="pill mixed">Conflicted</div></div><div class="intel-summary"><div class="mini">Scan Intel</div><div class="immediate"><div class="mini">Immediate Read</div><div class="read">BUY</div><div class="note">Trend up · Partial alignment</div></div></div><div class="scanrow"><div>Trend</div><div><span class="arrow-up">↑</span></div></div><div class="scanrow"><div>Convergence</div><div class="blocks"><span class="block green"></span><span class="block green"></span><span class="block yellow"></span></div></div><div class="scanrow"><div>ADX</div><div>TREND</div></div><div class="scanrow"><div>H/L</div><div>—</div></div><div class="scanrow"><div>MFI</div><div>—</div></div><div class="scanrow"><div>Strength</div><div>—</div></div><div class="scanrow"><div>Return</div><div>—</div></div><div class="stats2"><div class="box"><div class="mini">Reversal Risk</div><div class="price">3/5</div></div><div class="box"><div class="mini">Intel Status</div><div class="price">Watch</div></div></div><div class="box"><div class="mini">ARYA Trend Strength</div><div class="price">56% Down</div></div></div>`}
+function battleCard(){return `<div class="card battle"><div class="topline"><div class="tag">Premium · Battlefield</div><div class="pricebox"><div class="mini">Live Price</div><div class="price">4,827.95</div></div></div><div style="margin-top:14px"><div class="symbol">GOLD</div><div class="subtitle">Bear Assault Plan</div></div><div class="statusrow"><div class="pill sell">SELL ASSAULT</div></div><div class="battle-hero"><div class="mini">Battle Plan</div><div class="subtitle">Sell rallies into resistance while the zone holds.</div></div><div class="chart"><div class="line stop"></div><div class="label ls">Stop 4,875</div><div class="zone"></div><div class="label lz">R2–R3 Zone</div><div class="line live"></div><div class="label ll">Live</div><div class="line fpv"></div><div class="label lf">FPV</div><div class="line target"></div><div class="label lt">Target 4,750</div><div class="route">➜</div></div><div class="battle-levels"><div class="level-card"><div class="mini">Entry</div><div class="value">R2 4,830 — R3 4,860</div></div><div class="level-card"><div class="mini">Stop</div><div class="value">4,875</div></div><div class="level-card"><div class="mini">Target</div><div class="value">4,750</div></div><div class="level-card"><div class="mini">Live</div><div class="value">4,827.95</div></div></div></div>`}
+function newsCard(){return `<div class="card news"><div class="topline"><div class="tag">Free · News</div><div class="pricebox"><div class="mini">Time</div><div class="price" style="font-size:20px">10:11 GMT</div></div></div><div style="margin-top:14px"><div class="symbol" style="font-size:38px">WAR ROOM BULLETIN</div><div class="subtitle">SPX500 · NAS100 · BTC · Oil · Gold</div></div><div class="news-hero"><div class="news-sub">Regime</div><div class="news-headline">Risk-On Lean</div><div class="statusrow"><div class="pill buy">Supports Buy Bias</div><div class="pill mixed">Headline Relief</div></div></div><div class="tile-grid"><div class="tile"><div class="mini">Immediate Context</div><p>Markets opened risk-off but reversed.</p></div><div class="tile"><div class="mini">Bias Effect</div><div class="price">Buy Support</div></div><div class="tile"><div class="mini">Urgency</div><div class="price">Medium</div></div><div class="tile"><div class="mini">Confidence</div><div class="price">4 / 5</div></div></div></div>`}
+function renderDashboard(){const el=document.getElementById('dashboardCards');if(el)el.innerHTML=intelCard()+battleCard()+newsCard()}
+function previewScanImage(input){const file=input.files&&input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{const img=document.getElementById('scanPreview');if(img){img.src=e.target.result;img.style.display='block';}};reader.readAsDataURL(file)}
+function optionList(selected, arr){return arr.map(v=>`<option value="${v}" ${selected===v?'selected':''}>${v}</option>`).join('')}
+function rowEditor(section, idx, row){return `<div class="admin-row"><input data-section="${section}" data-idx="${idx}" data-field="ticker" value="${row[0]}"><input data-section="${section}" data-idx="${idx}" data-field="name" value="${row[1]}"><input data-section="${section}" data-idx="${idx}" data-field="category" value="${row[2]}"><select data-section="${section}" data-idx="${idx}" data-field="trend">${optionList(row[3],['up','down'])}</select><select data-section="${section}" data-idx="${idx}" data-field="conv0">${optionList(row[4][0],['green','yellow','red'])}</select><select data-section="${section}" data-idx="${idx}" data-field="conv1">${optionList(row[4][1],['green','yellow','red'])}</select><select data-section="${section}" data-idx="${idx}" data-field="conv2">${optionList(row[4][2],['green','yellow','red'])}</select><select data-section="${section}" data-idx="${idx}" data-field="bias">${optionList(row[5],['BUY','SELL'])}</select><input data-section="${section}" data-idx="${idx}" data-field="state" value="${row[6]}"><select data-section="${section}" data-idx="${idx}" data-field="access">${optionList(row[7],['Free','Premium'])}</select><div class="row-tools"><button class="icon-btn" onclick="removeRow('${section}',${idx})">✕</button></div></div>`}
+let adminData=null;
+function loadDataToAdmin(data){adminData=JSON.parse(JSON.stringify(data));const s=document.getElementById('sessionName');if(s)s.value=adminData.updatedAt||'Update';const m=document.getElementById('macroTable');if(m)m.innerHTML=adminData.macro.map((r,i)=>rowEditor('macro',i,r)).join('');const c=document.getElementById('cryptoTable');if(c)c.innerHTML=adminData.crypto.map((r,i)=>rowEditor('crypto',i,r)).join('');bindEditors()}
+function bindEditors(){document.querySelectorAll('[data-field]').forEach(el=>{el.oninput=()=>applyEdit(el);el.onchange=()=>applyEdit(el);})}
+function applyEdit(el){const s=el.dataset.section,i=Number(el.dataset.idx),f=el.dataset.field,r=adminData[s][i],v=el.value;if(f==='ticker')r[0]=v; else if(f==='name')r[1]=v; else if(f==='category')r[2]=v; else if(f==='trend')r[3]=v; else if(f==='conv0')r[4][0]=v; else if(f==='conv1')r[4][1]=v; else if(f==='conv2')r[4][2]=v; else if(f==='bias')r[5]=v; else if(f==='state')r[6]=v; else if(f==='access')r[7]=v;}
+function removeRow(s,i){adminData[s].splice(i,1);loadDataToAdmin(adminData)}
+function addRow(s){adminData[s].push(['NEW','New Instrument','Category','up',['green','green','green'],'BUY','Watch','Premium']);loadDataToAdmin(adminData)}
+function loadDefaultsIntoAdmin(){loadDataToAdmin(DEFAULT_WATCHLIST)} function loadSavedIntoAdmin(){loadDataToAdmin(getWatchlistData())}
+function applyThisScan(){adminData.updatedAt=document.getElementById('sessionName').value||'Update';setWatchlistData(adminData);const status=document.getElementById('status');if(status){status.className='status good';status.innerHTML='This scan has been applied to the Watchlist. <a class="anchor" href="watchlist.html">Open Watchlist</a>';}}
