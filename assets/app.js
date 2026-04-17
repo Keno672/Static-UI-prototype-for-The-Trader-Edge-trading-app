@@ -24,35 +24,9 @@ function watchRow(r) {
 }
 function renderWatchlist() {
   const data = getWatchlistData();
-  const macro = document.getElementById('macro');
-  const crypto = document.getElementById('crypto');
-  const updated = document.getElementById('updatedSession');
-  if (updated) updated.textContent = data.updatedAt || 'Latest';
-  if (macro) macro.innerHTML = data.macro.map(watchRow).join('');
-  if (crypto) crypto.innerHTML = data.crypto.map(watchRow).join('');
-}
-function loadDefaultsIntoAdmin() {
-  const data = DEFAULT_WATCHLIST;
-  document.getElementById('sessionName').value = data.updatedAt || 'Morning Command';
-  document.getElementById('macroJson').value = JSON.stringify(data.macro, null, 2);
-  document.getElementById('cryptoJson').value = JSON.stringify(data.crypto, null, 2);
-}
-function loadSavedIntoAdmin() {
-  const data = getWatchlistData();
-  document.getElementById('sessionName').value = data.updatedAt || 'Morning Command';
-  document.getElementById('macroJson').value = JSON.stringify(data.macro, null, 2);
-  document.getElementById('cryptoJson').value = JSON.stringify(data.crypto, null, 2);
-}
-function saveAdminToWatchlist() {
-  try {
-    const updatedAt = document.getElementById('sessionName').value || 'Update';
-    const macro = JSON.parse(document.getElementById('macroJson').value);
-    const crypto = JSON.parse(document.getElementById('cryptoJson').value);
-    setWatchlistData({updatedAt, macro, crypto});
-    document.getElementById('status').textContent = 'Watchlist updated locally. Refresh Watchlist page.';
-  } catch (e) {
-    document.getElementById('status').textContent = 'JSON format error. Check commas, brackets, and quotes.';
-  }
+  document.getElementById('updatedSession').textContent = data.updatedAt || 'Latest';
+  document.getElementById('macro').innerHTML = data.macro.map(watchRow).join('');
+  document.getElementById('crypto').innerHTML = data.crypto.map(watchRow).join('');
 }
 function previewScanImage(input) {
   const file = input.files && input.files[0];
@@ -64,4 +38,68 @@ function previewScanImage(input) {
     img.style.display = 'block';
   };
   reader.readAsDataURL(file);
+}
+function optionList(selected, arr) {
+  return arr.map(v => `<option value="${v}" ${selected===v?'selected':''}>${v}</option>`).join('');
+}
+function rowEditor(section, idx, row) {
+  return `<div class="admin-row">
+    <input data-section="${section}" data-idx="${idx}" data-field="ticker" value="${row[0]}">
+    <input data-section="${section}" data-idx="${idx}" data-field="name" value="${row[1]}">
+    <input data-section="${section}" data-idx="${idx}" data-field="category" value="${row[2]}">
+    <select data-section="${section}" data-idx="${idx}" data-field="trend">${optionList(row[3], ['up','down'])}</select>
+    <select data-section="${section}" data-idx="${idx}" data-field="conv0">${optionList(row[4][0], ['green','yellow','red'])}</select>
+    <select data-section="${section}" data-idx="${idx}" data-field="conv1">${optionList(row[4][1], ['green','yellow','red'])}</select>
+    <select data-section="${section}" data-idx="${idx}" data-field="conv2">${optionList(row[4][2], ['green','yellow','red'])}</select>
+    <select data-section="${section}" data-idx="${idx}" data-field="bias">${optionList(row[5], ['BUY','SELL'])}</select>
+    <input data-section="${section}" data-idx="${idx}" data-field="state" value="${row[6]}">
+    <select data-section="${section}" data-idx="${idx}" data-field="access">${optionList(row[7], ['Free','Premium'])}</select>
+    <div class="row-tools"><button class="icon-btn" onclick="removeRow('${section}',${idx})">✕</button></div>
+  </div>`;
+}
+let adminData = null;
+function loadDataToAdmin(data) {
+  adminData = JSON.parse(JSON.stringify(data));
+  document.getElementById('sessionName').value = adminData.updatedAt || 'Update';
+  document.getElementById('macroTable').innerHTML = adminData.macro.map((r,i)=>rowEditor('macro', i, r)).join('');
+  document.getElementById('cryptoTable').innerHTML = adminData.crypto.map((r,i)=>rowEditor('crypto', i, r)).join('');
+  bindEditors();
+}
+function bindEditors() {
+  document.querySelectorAll('[data-field]').forEach(el => {
+    el.oninput = () => applyEdit(el);
+    el.onchange = () => applyEdit(el);
+  });
+}
+function applyEdit(el) {
+  const section = el.dataset.section;
+  const idx = Number(el.dataset.idx);
+  const field = el.dataset.field;
+  const row = adminData[section][idx];
+  const val = el.value;
+  if (field === 'ticker') row[0] = val;
+  else if (field === 'name') row[1] = val;
+  else if (field === 'category') row[2] = val;
+  else if (field === 'trend') row[3] = val;
+  else if (field === 'conv0') row[4][0] = val;
+  else if (field === 'conv1') row[4][1] = val;
+  else if (field === 'conv2') row[4][2] = val;
+  else if (field === 'bias') row[5] = val;
+  else if (field === 'state') row[6] = val;
+  else if (field === 'access') row[7] = val;
+}
+function removeRow(section, idx) {
+  adminData[section].splice(idx,1);
+  loadDataToAdmin(adminData);
+}
+function addRow(section) {
+  adminData[section].push(['NEW','New Instrument','Category','up',['green','green','green'],'BUY','Watch','Premium']);
+  loadDataToAdmin(adminData);
+}
+function loadDefaultsIntoAdmin() { loadDataToAdmin(DEFAULT_WATCHLIST); }
+function loadSavedIntoAdmin() { loadDataToAdmin(getWatchlistData()); }
+function saveAdminToWatchlist() {
+  adminData.updatedAt = document.getElementById('sessionName').value || 'Update';
+  setWatchlistData(adminData);
+  document.getElementById('status').textContent = 'Watchlist updated locally. Refresh Watchlist page.';
 }

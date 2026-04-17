@@ -3,33 +3,23 @@
   <div class='panel'>
     <div class='eyebrow'>Admin → Scan Input</div>
     <h1>Scan Upload</h1>
-    <div class='sub'>You can upload the screenshot for visual reference, then update the watchlist using the structured data boxes below. This version stores the latest watchlist in your browser.</div>
-    <div class='field'>
-      <label>Session name</label>
-      <input id='sessionName' value='Morning Command'>
-    </div>
-    <div class='field'>
-      <label>Scan screenshot</label>
-      <input type='file' accept='image/*' onchange='previewScanImage(this)'>
-    </div>
-    <div class='preview'>
-      <div class='small'>Screenshot preview</div>
-      <img id='scanPreview' style='display:none' alt='Scan preview'>
-    </div>
+    <div class='sub'>Upload the screenshot for reference. Then update the watchlist using the manual scan-entry table below.</div>
+    <div class='field'><label>Session name</label><input id='sessionName' value='Morning Command'></div>
+    <div class='field'><label>Scan screenshot</label><input type='file' accept='image/*' onchange='previewScanImage(this)'></div>
+    <div class='preview'><div class='small'>Screenshot preview</div><img id='scanPreview' style='display:none' alt='Scan preview'></div>
   </div>
   <div class='panel'>
     <div class='eyebrow'>How this works</div>
     <h2>Update Watchlist Logic</h2>
-    <div class='code'>1. Upload screenshot for reference
-2. Edit Market Watch JSON
-3. Edit Crypto Watch JSON
-4. Click Update Watchlist
-5. Open Watchlist page and refresh
+    <div class='helpbox'>1. Upload screenshot for reference
+2. Edit rows in the manual table
+3. Click Update Watchlist
+4. Open Watchlist page and refresh
 
-Each row format:
-["TICKER","Display Name","Category","up/down",["green","yellow","red"],"BUY/SELL","State","Access"]</div>
+Each row controls:
+Ticker · Name · Category · Trend · Convergence 1/2/3 · Bias · State · Access</div>
     <div class='status' id='status'>Ready.</div>
-    <div style='margin-top:12px'>
+    <div class='actions'>
       <button class='btn' onclick='loadDefaultsIntoAdmin()'>Load Default Sample</button>
       <button class='btn' onclick='loadSavedIntoAdmin()'>Load Saved Watchlist</button>
       <button class='btn primary' onclick='saveAdminToWatchlist()'>Update Watchlist</button>
@@ -38,11 +28,19 @@ Each row format:
 </div>
 
 <div class='panel' style='margin-top:18px'>
-  <div class='section-title'><h2>Market Watch JSON</h2><div class='small'>Indices · Metals · Forex · Energy · Equity proxy</div></div>
-  <textarea id='macroJson'></textarea>
-  <hr>
-  <div class='section-title'><h2>Crypto Watch JSON</h2><div class='small'>Crypto board</div></div>
-  <textarea id='cryptoJson'></textarea>
+  <div class='section-title'><h2>Market Watch Table</h2><div class='small'>Indices · Metals · Forex · Energy · Equity proxy</div></div>
+  <div class='table-head'>
+    <div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div>
+  </div>
+  <div id='macroTable'></div>
+  <div class='actions'><button class='btn' onclick="addRow('macro')">Add Market Row</button></div>
+
+  <div class='section-title'><h2>Crypto Watch Table</h2><div class='small'>Crypto board</div></div>
+  <div class='table-head'>
+    <div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div>
+  </div>
+  <div id='cryptoTable'></div>
+  <div class='actions'><button class='btn' onclick="addRow('crypto')">Add Crypto Row</button></div>
 </div>
 
 <script>loadSavedIntoAdmin();</script>
