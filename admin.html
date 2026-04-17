@@ -3,26 +3,26 @@
   <div class='panel'>
     <div class='eyebrow'>Admin → Scan Input</div>
     <h1>Scan Upload</h1>
-    <div class='sub'>Upload the screenshot for reference. Then update the watchlist using the manual scan-entry table below.</div>
+    <div class='sub'>Upload the screenshot for reference. Then align the manual table and apply that scan to the watchlist.</div>
     <div class='field'><label>Session name</label><input id='sessionName' value='Morning Command'></div>
     <div class='field'><label>Scan screenshot</label><input type='file' accept='image/*' onchange='previewScanImage(this)'></div>
     <div class='preview'><div class='small'>Screenshot preview</div><img id='scanPreview' style='display:none' alt='Scan preview'></div>
   </div>
   <div class='panel'>
-    <div class='eyebrow'>How this works</div>
-    <h2>Update Watchlist Logic</h2>
+    <div class='eyebrow'>Manual apply mode</div>
+    <h2>Apply This Scan</h2>
     <div class='helpbox'>1. Upload screenshot for reference
 2. Edit rows in the manual table
-3. Click Update Watchlist
-4. Open Watchlist page and refresh
+3. Click Apply This Scan
+4. Open Watchlist page
 
-Each row controls:
-Ticker · Name · Category · Trend · Convergence 1/2/3 · Bias · State · Access</div>
-    <div class='status' id='status'>Ready.</div>
+The image itself is not parsed yet.
+The watchlist updates from the table you confirm.</div>
+    <div class='status' id='status'>Ready. Upload screenshot, edit rows, then apply the scan.</div>
     <div class='actions'>
       <button class='btn' onclick='loadDefaultsIntoAdmin()'>Load Default Sample</button>
       <button class='btn' onclick='loadSavedIntoAdmin()'>Load Saved Watchlist</button>
-      <button class='btn primary' onclick='saveAdminToWatchlist()'>Update Watchlist</button>
+      <button class='btn primary' onclick='applyThisScan()'>Apply This Scan</button>
     </div>
   </div>
 </div>
@@ -33,14 +33,14 @@ Ticker · Name · Category · Trend · Convergence 1/2/3 · Bias · State · Acc
     <div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div>
   </div>
   <div id='macroTable'></div>
-  <div class='actions'><button class='btn' onclick="addRow('macro')">Add Market Row</button></div>
+  <div class='actions'><button class='btn good' onclick="addRow('macro')">Add Market Row</button></div>
 
   <div class='section-title'><h2>Crypto Watch Table</h2><div class='small'>Crypto board</div></div>
   <div class='table-head'>
     <div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div>
   </div>
   <div id='cryptoTable'></div>
-  <div class='actions'><button class='btn' onclick="addRow('crypto')">Add Crypto Row</button></div>
+  <div class='actions'><button class='btn good' onclick="addRow('crypto')">Add Crypto Row</button></div>
 </div>
 
 <script>loadSavedIntoAdmin();</script>
