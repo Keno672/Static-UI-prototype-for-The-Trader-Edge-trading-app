@@ -1,1 +1,1 @@
-Master restore package: one matched build across the whole app.
+Gold master template upgrade with richer Intel and Battlefield cards for use as the model for all future instruments.
