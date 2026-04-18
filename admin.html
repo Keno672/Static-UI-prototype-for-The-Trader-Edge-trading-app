@@ -1,72 +1,87 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title><link rel="stylesheet" href="assets/styles.css"><script src="assets/app.js"></script></head><body onload="loadAdmin()"><div class="wrap"><script>document.write(nav("Admin"))</script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title><link rel="stylesheet" href="assets/styles.css"><script src="assets/app.js"></script></head><body onload="loadAdminWizard()"><div class="wrap"><script>document.write(nav("Admin"))</script>
 <div class="panel">
-  <div class="eyebrow">Admin Control Panel</div>
-  <h1>Watchlist + Battlefield + News publisher</h1>
-  <div class="sub">This admin now directly controls the live board across the app.</div>
+  <div class="eyebrow">Admin 3-step wizard</div>
+  <h1>Publish a market update</h1>
+  <div class="sub">Use a simple sequence: build the board, choose the featured trade, then publish the news context.</div>
 
-  <div class="field"><label>Session name</label><input id="sessionName"></div>
-
-  <div class="grid3" style="margin-top:18px">
-    <div class="upload-card"><div class="eyebrow">Upload 1</div><h3>Scan</h3><div class="sub">Reference only</div><input type="file" accept="image/*" onchange="previewUpload(this,'scan')"><div class="last-file"><strong>Latest:</strong> <span id="scanFileLabel">None</span></div><div class="preview"><div class="small">Scan preview</div><img id="scanPreview" style="display:none"></div></div>
-    <div class="upload-card"><div class="eyebrow">Upload 2</div><h3>Chart</h3><div class="sub">Reference only</div><input type="file" accept="image/*" onchange="previewUpload(this,'chart')"><div class="last-file"><strong>Latest:</strong> <span id="chartFileLabel">None</span></div></div>
-    <div class="upload-card"><div class="eyebrow">Upload 3</div><h3>News</h3><div class="sub">Reference only</div><input type="file" accept="image/*,.pdf,.txt" onchange="previewUpload(this,'news')"><div class="last-file"><strong>Latest:</strong> <span id="newsFileLabel">None</span></div></div>
+  <div class="stepper" style="margin-top:18px">
+    <button class="step-btn active" onclick="showStep(1)"><div class="step-label">Step 1</div><strong>Watchlist + Top 5</strong></button>
+    <button class="step-btn" onclick="showStep(2)"><div class="step-label">Step 2</div><strong>Featured Trade</strong></button>
+    <button class="step-btn" onclick="showStep(3)"><div class="step-label">Step 3</div><strong>News + Publish</strong></button>
   </div>
 
   <div id="uploadSummary" class="grid3" style="margin-top:18px"></div>
 
-  <div class="grid3" style="margin-top:18px">
-    <div class="box">
-      <div class="eyebrow">Publish Watchlist</div>
-      <div class="field"><label>Featured instrument for Command Desk</label><input id="featuredInstrument"></div>
-      <div class="sub">Edit rows below, then publish.</div>
+  <div class="wizard-step" style="margin-top:18px">
+    <div class="grid3">
+      <div class="box"><div class="eyebrow">Upload</div><h3>Scan</h3><input type="file" accept="image/*" onchange="previewUpload(this,'scan')"><div class="small" id="scanFileLabel">None</div><img id="scanPreview" style="display:none;max-width:100%;margin-top:12px;border-radius:12px"></div>
+      <div class="box"><div class="eyebrow">Upload</div><h3>Chart</h3><input type="file" accept="image/*" onchange="previewUpload(this,'chart')"><div class="small" id="chartFileLabel">None</div></div>
+      <div class="box"><div class="eyebrow">Upload</div><h3>News</h3><input type="file" accept="image/*,.pdf,.txt" onchange="previewUpload(this,'news')"><div class="small" id="newsFileLabel">None</div></div>
     </div>
+    <div class="field"><label>Session name</label><input id="sessionName"></div>
+    <div class="section-title"><h2>Market Watch</h2></div>
+    <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
+    <div id="macroTable"></div>
+    <div class="actions"><button class="btn good" onclick="addRow('macro')">Add Market Row</button></div>
+    <div class="section-title"><h2>Crypto Watch</h2></div>
+    <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
+    <div id="cryptoTable"></div>
+    <div class="actions"><button class="btn good" onclick="addRow('crypto')">Add Crypto Row</button></div>
     <div class="box">
-      <div class="eyebrow">Publish Battlefield</div>
-      <div class="field"><label>Instrument</label><input id="battleInstrument"></div>
-      <div class="field"><label>Setup type</label><input id="setupType"></div>
-      <div class="field"><label>Campaign tag</label><input id="campaignTag"></div>
-      <div class="field"><label>Summary</label><textarea id="battleSummary" rows="3"></textarea></div>
-    </div>
-    <div class="box">
-      <div class="eyebrow">Publish News</div>
-      <div class="field"><label>Regime</label><select id="regime"><option>Risk-On</option><option>Risk-Off</option></select></div>
-      <div class="field"><label>Why</label><textarea id="newsWhy" rows="3"></textarea></div>
-      <div class="field"><label>Drivers (use | separator)</label><input id="newsDrivers"></div>
-      <div class="field"><label>Sources</label><input id="newsSources"></div>
-    </div>
-  </div>
-
-  <div class="grid2" style="margin-top:18px">
-    <div class="box">
-      <div class="eyebrow">Battlefield details</div>
-      <div class="field"><label>Entry logic</label><input id="entryLogic"></div>
-      <div class="field"><label>Invalidation</label><input id="invalidation"></div>
-      <div class="field"><label>Target 1</label><input id="target1"></div>
-      <div class="field"><label>Target 2</label><input id="target2"></div>
-      <div class="field"><label>Management</label><textarea id="management" rows="3"></textarea></div>
-    </div>
-    <div class="box">
-      <div class="eyebrow">Actions</div>
-      <div class="sub">Publish button now pushes these fields live into Command Desk, Watchlist, and Asset pages.</div>
-      <div class="actions">
-        <button class="btn" onclick="resetDefaults()">Reset Defaults</button>
-        <button class="btn primary" onclick="publishAll()">Publish All</button>
+      <div class="eyebrow">Top 5</div>
+      <div class="grid3">
+        <div class="field"><label>Top 1</label><select id="top5_1"></select></div>
+        <div class="field"><label>Top 2</label><select id="top5_2"></select></div>
+        <div class="field"><label>Top 3</label><select id="top5_3"></select></div>
+        <div class="field"><label>Top 4</label><select id="top5_4"></select></div>
+        <div class="field"><label>Top 5</label><select id="top5_5"></select></div>
       </div>
-      <div class="status" id="status">Ready.</div>
     </div>
+    <div class="actions"><button class="btn primary" onclick="saveStep1()">Save Step 1 →</button></div>
   </div>
-</div>
 
-<div class="panel" style="margin-top:18px">
-  <div class="eyebrow">Edit Watchlist Rows</div>
-  <h2>Market Watch Table</h2>
-  <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
-  <div id="macroTable"></div>
-  <div class="actions"><button class="btn good" onclick="addRow('macro')">Add Market Row</button></div>
+  <div class="wizard-step hidden" style="margin-top:18px">
+    <div class="box">
+      <div class="eyebrow">Featured instrument</div>
+      <div class="field"><label>Command Desk instrument</label><select id="featuredInstrument"></select></div>
+      <div class="sub">This one instrument drives Intel + Battlefield + News on the Command Desk.</div>
+    </div>
+    <div class="grid2">
+      <div class="box">
+        <div class="eyebrow">Battlefield</div>
+        <div class="field"><label>Instrument</label><select id="battleInstrument"></select></div>
+        <div class="field"><label>Setup type</label><input id="setupType"></div>
+        <div class="field"><label>Campaign tag</label><input id="campaignTag"></div>
+        <div class="field"><label>Summary</label><textarea id="battleSummary" rows="3"></textarea></div>
+      </div>
+      <div class="box">
+        <div class="eyebrow">Battlefield details</div>
+        <div class="field"><label>Entry logic</label><input id="entryLogic"></div>
+        <div class="field"><label>Invalidation</label><input id="invalidation"></div>
+        <div class="field"><label>Target 1</label><input id="target1"></div>
+        <div class="field"><label>Target 2</label><input id="target2"></div>
+        <div class="field"><label>Management</label><textarea id="management" rows="3"></textarea></div>
+      </div>
+    </div>
+    <div class="actions"><button class="btn" onclick="showStep(1)">← Back</button><button class="btn primary" onclick="saveStep2()">Save Step 2 →</button></div>
+  </div>
 
-  <div class="section-title"><h2>Crypto Watch Table</h2></div>
-  <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
-  <div id="cryptoTable"></div>
-  <div class="actions"><button class="btn good" onclick="addRow('crypto')">Add Crypto Row</button></div>
+  <div class="wizard-step hidden" style="margin-top:18px">
+    <div class="grid2">
+      <div class="box">
+        <div class="eyebrow">News publisher</div>
+        <div class="field"><label>Regime</label><select id="regime"><option>Risk-On</option><option>Risk-Off</option></select></div>
+        <div class="field"><label>Why</label><textarea id="newsWhy" rows="4"></textarea></div>
+        <div class="field"><label>Drivers (use | separator)</label><input id="newsDrivers"></div>
+        <div class="field"><label>Sources</label><input id="newsSources"></div>
+      </div>
+      <div class="preview-card">
+        <div class="eyebrow">Publish preview</div>
+        <div class="note">Step 1 builds the full watchlist and Top 5.<br>Step 2 picks the featured Command Desk trade.<br>Step 3 sets the regime context and publishes live.</div>
+        <div class="status" id="status">Ready.</div>
+      </div>
+    </div>
+    <div class="actions"><button class="btn" onclick="showStep(2)">← Back</button><button class="btn primary" onclick="publishWizard()">Publish All</button></div>
+  </div>
 </div>
 </div></body></html>

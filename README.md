@@ -1,1 +1,1 @@
-Admin Control Panel build. Upload the full package. Admin now publishes Watchlist, Battlefield, and News across the app.
+Admin redesigned as a 3-step wizard: Watchlist + Top 5, Featured Trade, News + Publish.
