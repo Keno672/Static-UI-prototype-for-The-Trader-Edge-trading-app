@@ -1,1 +1,1 @@
-Admin upload-first panel and clickable watchlist rows to asset command page.
+News card upgrade: Trader Noble daily commentary + FxPro Squawk framing with risk-on / risk-off explanation.
