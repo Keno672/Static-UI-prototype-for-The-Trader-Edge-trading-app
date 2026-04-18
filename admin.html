@@ -1,1 +1,37 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title><link rel="stylesheet" href="assets/styles.css"><script src="assets/app.js"></script></head><body onload="loadSavedIntoAdmin()"><div class="wrap"><script>document.write(nav("Admin"))</script><div class="panel"><div class="eyebrow">Admin → Upload First</div><h1>Publish a market update</h1><div class="sub">Upload your scan, chart, and news first. Then review the extracted board only if needed, and publish the update.</div><div class="field"><label>Session name</label><input id="sessionName" value="Morning Command"></div><div class="upload-grid" style="margin-top:18px"><div class="upload-card"><div class="eyebrow">Step 1</div><h3>Upload Scan</h3><div class="sub">This drives the watchlist board.</div><input type="file" accept="image/*" onchange="previewUpload(this,'scan')"><div class="last-file"><strong>Latest:</strong> <span id="scanFileLabel">None</span></div><div class="preview"><div class="small">Scan preview</div><img id="scanPreview" style="display:none" alt="Scan preview"></div></div><div class="upload-card"><div class="eyebrow">Step 2</div><h3>Upload Chart</h3><div class="sub">This supports the Battlefield plan.</div><input type="file" accept="image/*" onchange="previewUpload(this,'chart')"><div class="last-file"><strong>Latest:</strong> <span id="chartFileLabel">None</span></div></div><div class="upload-card"><div class="eyebrow">Step 3</div><h3>Upload News</h3><div class="sub">This updates the news/context layer.</div><input type="file" accept="image/*,.txt,.pdf" onchange="previewUpload(this,'news')"><div class="last-file"><strong>Latest:</strong> <span id="newsFileLabel">None</span></div></div></div><div id="uploadSummary" class="grid3" style="margin-top:18px"></div><div class="actions"><button class="btn" onclick="loadDefaultsIntoAdmin()">Load Default Sample</button><button class="btn" onclick="loadSavedIntoAdmin()">Load Saved Watchlist</button><button class="btn" onclick="toggleAdvanced()">Review extracted board</button><button class="btn primary" onclick="applyThisScan()">Publish Update</button></div><div class="status" id="status">Upload files, review board if needed, then publish.</div></div><div id="advancedEditor" class="panel hidden" style="margin-top:18px"><div class="eyebrow">Advanced review</div><h2>Review extracted board</h2><div class="sub">Use this only when you want to correct or refine the watchlist rows before publishing.</div><div class="section-title"><h3>Market Watch Table</h3></div><div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div><div id="macroTable"></div><div class="actions"><button class="btn good" onclick="addRow('macro')">Add Market Row</button></div><div class="section-title"><h3>Crypto Watch Table</h3></div><div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div><div id="cryptoTable"></div><div class="actions"><button class="btn good" onclick="addRow('crypto')">Add Crypto Row</button></div></div></div></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title><link rel="stylesheet" href="assets/styles.css"><script src="assets/app.js"></script></head><body onload="loadSavedIntoAdmin()"><div class="wrap"><script>document.write(nav("Admin"))</script>
+<div class="panel glow">
+  <div class="eyebrow">Admin → Upload First</div>
+  <h1>Publish a market update</h1>
+  <div class="sub">Upload the files first, then review the board only if needed, then publish.</div>
+  <div class="field"><label>Session name</label><input id="sessionName" value="Morning Command"></div>
+  <div class="upload-grid" style="margin-top:18px">
+    <div class="upload-card"><div class="eyebrow">Step 1</div><h3>Upload Scan</h3><div class="sub">Drives the watchlist board.</div><input type="file" accept="image/*" onchange="previewUpload(this,'scan')"><div class="last-file"><strong>Latest:</strong> <span id="scanFileLabel">None</span></div><div class="preview"><div class="small">Scan preview</div><img id="scanPreview" style="display:none" alt="Scan preview"></div></div>
+    <div class="upload-card"><div class="eyebrow">Step 2</div><h3>Upload Chart</h3><div class="sub">Supports the Battlefield plan.</div><input type="file" accept="image/*" onchange="previewUpload(this,'chart')"><div class="last-file"><strong>Latest:</strong> <span id="chartFileLabel">None</span></div></div>
+    <div class="upload-card"><div class="eyebrow">Step 3</div><h3>Upload News</h3><div class="sub">Updates the War Room context.</div><input type="file" accept="image/*,.txt,.pdf" onchange="previewUpload(this,'news')"><div class="last-file"><strong>Latest:</strong> <span id="newsFileLabel">None</span></div></div>
+  </div>
+  <div id="uploadSummary" class="grid3" style="margin-top:18px"></div>
+  <div class="actions">
+    <button class="btn" onclick="loadDefaultsIntoAdmin()">Load Default Sample</button>
+    <button class="btn" onclick="loadSavedIntoAdmin()">Load Saved Watchlist</button>
+    <button class="btn" onclick="toggleAdvanced()">Review extracted board</button>
+    <button class="btn primary" onclick="applyThisScan()">Publish Update</button>
+  </div>
+  <div class="status" id="status">Upload files, review board if needed, then publish.</div>
+</div>
+
+<div id="advancedEditor" class="panel hidden" style="margin-top:18px">
+  <div class="eyebrow">Advanced review</div>
+  <h2>Review extracted board</h2>
+  <div class="sub">Only use this to refine rows before publishing.</div>
+
+  <div class="section-title"><h3>Market Watch Table</h3></div>
+  <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
+  <div id="macroTable"></div>
+  <div class="actions"><button class="btn good" onclick="addRow('macro')">Add Market Row</button></div>
+
+  <div class="section-title"><h3>Crypto Watch Table</h3></div>
+  <div class="table-head"><div>Ticker</div><div>Name</div><div>Category</div><div>Trend</div><div>C1</div><div>C2</div><div>C3</div><div>Bias</div><div>State</div><div>Access</div><div>Del</div></div>
+  <div id="cryptoTable"></div>
+  <div class="actions"><button class="btn good" onclick="addRow('crypto')">Add Crypto Row</button></div>
+</div>
+</div></body></html>

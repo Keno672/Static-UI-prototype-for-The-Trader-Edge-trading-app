@@ -1,1 +1,1 @@
-Gold master template upgrade with richer Intel and Battlefield cards for use as the model for all future instruments.
+Complete matched game-effect build for Trader Edge. Upload this entire package only.
