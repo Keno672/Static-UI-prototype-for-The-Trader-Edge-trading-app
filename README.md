@@ -1,1 +1,1 @@
-Complete matched game-effect build for Trader Edge. Upload this entire package only.
+Admin Control Panel build. Upload the full package. Admin now publishes Watchlist, Battlefield, and News across the app.
