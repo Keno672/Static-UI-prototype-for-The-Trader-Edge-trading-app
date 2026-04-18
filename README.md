@@ -1,1 +1,1 @@
-News card upgrade: Trader Noble daily commentary + FxPro Squawk framing with risk-on / risk-off explanation.
+Master restore package: one matched build across the whole app.
